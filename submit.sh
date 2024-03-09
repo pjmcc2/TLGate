@@ -10,4 +10,4 @@
 module load slurm
 module load cuda/12.2
 source env/bin/activate
-python3 gate.py
+python3 gate.py -1 30 10 512
