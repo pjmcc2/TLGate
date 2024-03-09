@@ -196,7 +196,7 @@ def main(epochs,num_tests,batch_size):
 
 if __name__ == "__main__":
    
-   epochs = 1
-   num_tests=1
+   epochs = 30
+   num_tests=10
    batch_size=512
    main(epochs,num_tests, batch_size)
