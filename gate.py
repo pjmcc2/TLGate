@@ -68,7 +68,7 @@ def train(model,dataloader, criterion, optimizer,device='cpu'):
     model.train()
     inc_acc=0
     inc_loss = 0
-    for i, data in tqdm(enumerate(dataloader)):
+    for i, data in enumerate(dataloader):
         # get the inputs; data is a list of [inputs, labels]
         X, y = data
 
@@ -92,7 +92,7 @@ def test(model,dataloader, criterion,device='cpu'):
     model.eval()
     inc_acc=0
     inc_loss = 0
-    for i, data in tqdm(enumerate(dataloader)):
+    for i, data in enumerate(dataloader):
         # get the inputs; data is a list of [inputs, labels]
         X, y = data
         X=X.to(device)
@@ -150,7 +150,7 @@ def main(epochs,num_tests,batch_size):
     criterion = nn.CrossEntropyLoss()
 
 
-    for j in range(len(model_params)):
+    for j in tqdm(range(len(model_params))):
         acc_lists_train = []
         loss_lists_train = []
         acc_lists_test = []
