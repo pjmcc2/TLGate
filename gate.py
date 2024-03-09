@@ -108,7 +108,7 @@ def test(model,dataloader, criterion,device='cpu'):
     return inc_acc,inc_loss
 
 
-def main(epochs,num_tests,batch_size):
+def main(gate_type, epochs, num_tests, batch_size):
     
     train_data = CIFAR10(root="data",
                         train=True,
@@ -140,8 +140,8 @@ def main(epochs,num_tests,batch_size):
 
 
 
-    gate_model_labels = ["no_gates", "layer_1","layer_2","last_layer", "all"]
-    model_params = [-1, 0, 1, 2, "all"]
+    #gate_model_labels = ["no_gates", "layer_1","layer_2","last_layer", "all"]
+    #model_params = [-1, 0, 1, 2, "all"]
 
 
     ### training part ###
@@ -150,53 +150,55 @@ def main(epochs,num_tests,batch_size):
     criterion = nn.CrossEntropyLoss()
 
 
-    for j in tqdm(range(len(model_params))):
-        acc_lists_train = []
-        loss_lists_train = []
-        acc_lists_test = []
-        loss_lists_test = []
-        for i in range(num_tests):
-            model = ClassNet(gate,model_params[j]) 
-            model.to(device)
-            optimizer = optim.Adam(model.parameters(), lr=0.0001)
-            a_list_train = []
-            a_list_test = []
-            loss_list_train = []
-            loss_list_test = []
 
-            for epoch in range(epochs):
-                
-                acc, loss = train(model,train_dataloader,criterion,optimizer,device)
-                a_list_train.append(acc)
-                loss_list_train.append(loss)
+    acc_lists_train = []
+    loss_lists_train = []
+    acc_lists_test = []
+    loss_lists_test = []
+    for i in range(num_tests):
+        model = ClassNet(gate,gate_type) 
+        model.to(device)
+        optimizer = optim.Adam(model.parameters(), lr=0.0001)
+        a_list_train = []
+        a_list_test = []
+        loss_list_train = []
+        loss_list_test = []
 
-                acc,loss = test(model,test_dataloader,criterion,device)
-                
-                a_list_test.append(acc)
-                loss_list_test.append(loss)
+        for epoch in range(epochs):
+            
+            acc, loss = train(model,train_dataloader,criterion,optimizer,device)
+            a_list_train.append(acc)
+            loss_list_train.append(loss)
 
-            acc_lists_test.append(a_list_test)
-            acc_lists_train.append(a_list_train)
-            loss_lists_test.append(loss_list_test)
-            loss_lists_train.append(loss_list_train)
+            acc,loss = test(model,test_dataloader,criterion,device)
+            
+            a_list_test.append(acc)
+            loss_list_test.append(loss)
+
+        acc_lists_test.append(a_list_test)
+        acc_lists_train.append(a_list_train)
+        loss_lists_test.append(loss_list_test)
+        loss_lists_train.append(loss_list_train)
 
 
-        tr_acc = np.array(acc_lists_train)
-        te_acc = np.array(acc_lists_test)
-        tr_loss = np.array(loss_lists_train)
-        te_loss = np.array(loss_lists_test)
+    tr_acc = np.array(acc_lists_train)
+    te_acc = np.array(acc_lists_test)
+    tr_loss = np.array(loss_lists_train)
+    te_loss = np.array(loss_lists_test)
 
-        save_dict = {"train_acc":tr_acc,
-                    "test_acc":te_acc,
-                    "train_loss":tr_loss,
-                    "test_loss":te_loss
-                    }
-        with open(f"pickles/gate_model_{gate_model_labels[j]}.pickle","wb") as f:
-            pickle.dump(save_dict,f)
+    save_dict = {"train_acc":tr_acc,
+                "test_acc":te_acc,
+                "train_loss":tr_loss,
+                "test_loss":te_loss
+                }
+    with open(f"pickles/gate_model_{gate_type}.pickle","wb") as f:
+        pickle.dump(save_dict,f)
 
 if __name__ == "__main__":
    
    epochs = 30
    num_tests=10
    batch_size=512
-   main(epochs,num_tests, batch_size)
+   # possible gates include: (-1, no gate), (0-2, gates getting closer to final layer), ("all", all)
+   gate_type=-1
+   main(-1,epochs,num_tests, batch_size)
