@@ -191,7 +191,7 @@ def main(epochs,num_tests,batch_size):
                     "train_loss":tr_loss,
                     "test_loss":te_loss
                     }
-        with open(f"gate_model_{gate_model_labels[j]}.pickle","wb") as f:
+        with open(f"pickles/gate_model_{gate_model_labels[j]}.pickle","wb") as f:
             pickle.dump(save_dict,f)
 
 if __name__ == "__main__":
