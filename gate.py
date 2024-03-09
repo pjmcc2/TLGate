@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 from torchvision.transforms import Compose
 from torchvision.transforms import Normalize
 import torch.optim as optim
-
+import argparse
 
 
 # Classifier network
@@ -108,7 +108,15 @@ def test(model,dataloader, criterion,device='cpu'):
     return inc_acc,inc_loss
 
 
-def main(gate_type, epochs, num_tests, batch_size):
+def main(args):
+    gate_type=args.gate_type
+    epochs = args.epochs
+    num_tests=gate_type=args.num_tests
+    batch_size=gate_type=args.batch_size
+    
+    
+    
+    
     
     train_data = CIFAR10(root="data",
                         train=True,
@@ -195,10 +203,13 @@ def main(gate_type, epochs, num_tests, batch_size):
         pickle.dump(save_dict,f)
 
 if __name__ == "__main__":
-   
-   epochs = 30
-   num_tests=10
-   batch_size=512
-   # possible gates include: (-1, no gate), (0-2, gates getting closer to final layer), ("all", all)
-   gate_type=-1
-   main(-1,epochs,num_tests, batch_size)
+
+  parser = argparse.ArgumentParser(description="Train a gate model and pickle the results")
+  parser.add_argument("gate_type", help="possible gates include: (-1, no gate), (0-2, gates getting closer to final layer), ('all', all)")
+  parser.add_argument("epochs", help="Number of training epochs")
+  parser.add_argument("num_tests", help="number of training iterations")
+  parser.add_argument("batch_size", help="batch_size")
+  args = parser.parse_args()
+  main(args)
+
+ 
