@@ -170,7 +170,7 @@ def main(epochs,num_tests,batch_size):
                 a_list_train.append(acc)
                 loss_list_train.append(loss)
 
-                loss,acc = test(model,test_dataloader,criterion,optimizer,device)
+                loss,acc = test(model,test_dataloader,criterion,device)
                 
                 a_list_test.append(acc)
                 loss_list_test.append(loss)
