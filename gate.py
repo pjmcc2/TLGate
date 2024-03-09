@@ -84,7 +84,7 @@ def train(model,dataloader, criterion, optimizer,device='cpu'):
         optimizer.step()
 
         _, predicted = torch.max(outputs.data, 1)
-        acc = (predicted == y).sum()/X.shape[0]
+        acc = (predicted == y).sum().item()/X.shape[0]
         inc_acc = inc_acc + (acc-inc_acc)/(i+1)
     return inc_acc,inc_loss
 
@@ -103,7 +103,7 @@ def test(model,dataloader, criterion,device='cpu'):
         inc_loss = inc_loss + (loss.item()-inc_loss)/(i+1)
 
         _, predicted = torch.max(outputs.data, 1)
-        acc = (predicted == y).sum()/X.shape[0]
+        acc = (predicted == y).sum().item()/X.shape[0]
         inc_acc = inc_acc + (acc-inc_acc)/(i+1)
     return inc_acc,inc_loss
 
@@ -166,11 +166,11 @@ def main(epochs,num_tests,batch_size):
 
             for epoch in range(epochs):
                 
-                loss, acc = train(model,train_dataloader,criterion,optimizer,device)
+                acc, loss = train(model,train_dataloader,criterion,optimizer,device)
                 a_list_train.append(acc)
                 loss_list_train.append(loss)
 
-                loss,acc = test(model,test_dataloader,criterion,device)
+                acc,loss = test(model,test_dataloader,criterion,device)
                 
                 a_list_test.append(acc)
                 loss_list_test.append(loss)
