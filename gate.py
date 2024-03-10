@@ -110,9 +110,9 @@ def test(model,dataloader, criterion,device='cpu'):
 
 def main(args):
     gate_type=args.gate_type
-    epochs = args.epochs
-    num_tests=gate_type=args.num_tests
-    batch_size=gate_type=args.batch_size
+    epochs = int(args.epochs)
+    num_tests=int(args.num_tests)
+    batch_size=int(args.batch_size)
     
     
     
