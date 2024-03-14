@@ -15,14 +15,6 @@ import torch.optim as optim
 import argparse
 
 
-class WeightedAvg(nn.module):
-    def __init__(self):
-        super().__init__()
-        self.a = nn.Parameter(torch.rand((1, 1)).item())
-        self.a.requires_grad = True
-
-    def forward(self, l1, l2):
-        return self.a * l1 + (1 - self.a) * l2
 
 
 class studentNet(nn.Module):
@@ -62,9 +54,12 @@ class studentNet(nn.Module):
 ## DISCLAIMER: THE FOLLOWING CODE IS MOSTLY COPIED FROM THE PYTORCH KD TUTORIAL ##
 def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn, T, a, device):
     teacher.eval()  # Teacher set to evaluation mode
-    student.train()  # Student to train mode
+    student.training()  # Student to train mode
     optimizer = optim
-    for inputs, labels in train_loader:
+    inc_acc=0
+    inc_loss = 0
+    for i, data in enumerate(train_loader):
+        inputs, labels = data
         inputs, labels = inputs.to(device), labels.to(device)
 
         optimizer.zero_grad()
@@ -90,9 +85,14 @@ def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn,
 
         # Weighted sum of the two losses
         loss = a * soft_targets_loss + (1 - a) * label_loss
+        inc_loss = inc_loss + (loss.item() - inc_loss) / (i + 1)
 
         loss.backward()
         optimizer.step()
+        _, predicted = torch.max(student_logits.data, 1)
+        acc = (predicted == labels).sum().item()/X.shape[0]
+        inc_acc = inc_acc + (acc-inc_acc)/(i+1)
+    return inc_acc, inc_loss
 
 
 def main(args):
@@ -137,8 +137,14 @@ def main(args):
     loss_lists_train = []
     acc_lists_test = []
     loss_lists_test = []
+    t_acc_lists_train = []
+    t_loss_lists_train = []
+    t_acc_lists_test = []
+    t_loss_lists_test = []
     for i in range(num_tests):
-        model = ClassNet(teacher, -1)
+    teacher_acc, teacher_loss = train(teacher, )
+    for i in range(num_tests):
+        model = studentNet(teacher, -1)
         model.to(device)
         optimizer = optim.Adam(model.parameters(), lr=0.0001)
         a_list_train = []
@@ -146,8 +152,8 @@ def main(args):
         loss_list_train = []
         loss_list_test = []
 
-        for epoch in range(epochs):
-            acc, loss = train(model, train_dataloader, criterion, optimizer, device)
+        for epoch in range(epochs): # test teacher separately
+            acc, loss = train_knowledge_distillation(teacher, model, train_dataloader, optimizer, criterion, T, a, device)
             a_list_train.append(acc)
             loss_list_train.append(loss)
 
