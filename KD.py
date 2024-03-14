@@ -122,7 +122,10 @@ def main(args):
     else:
         device = 'cpu'
 
-    teacher = vgg13(weights='DEFAULT', progress=True)
+    with("pickles/teacher.pickle","rb") as f:
+        teacher_saved = pickle.load(f)
+
+    teacher = teacher_saved["model"]
     teacher.to(device)
     # Freeze layers
     for param in teacher.parameters():
@@ -137,12 +140,7 @@ def main(args):
     loss_lists_train = []
     acc_lists_test = []
     loss_lists_test = []
-    t_acc_lists_train = []
-    t_loss_lists_train = []
-    t_acc_lists_test = []
-    t_loss_lists_test = []
-    for i in range(num_tests):
-    teacher_acc, teacher_loss = train(teacher, )
+
     for i in range(num_tests):
         model = studentNet(teacher, -1)
         model.to(device)
