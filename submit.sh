@@ -10,4 +10,7 @@
 module load slurm
 module load cuda/12.2
 source env/bin/activate
-python3 gate.py "all" 30 10 512
+python3 teacher.py 30 10 512
+
+
+# 30 epochs, 10 tests, 512 batch size
