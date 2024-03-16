@@ -122,7 +122,7 @@ def main(args):
     else:
         device = 'cpu'
 
-    with("pickles/teacher.pickle","rb") as f:
+    with open("pickles/teacher.pickle","rb") as f:
         teacher_saved = pickle.load(f)
 
     teacher = teacher_saved["model"]
