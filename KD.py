@@ -175,7 +175,7 @@ def main(args):
                  "train_loss": tr_loss,
                  "test_loss": te_loss
                  }
-    with open(f"pickles/gate_model_{gate_type}.pickle", "wb") as f:
+    with open(f"pickles/KD_model.pickle", "wb") as f:
         pickle.dump(save_dict, f)
 
 
