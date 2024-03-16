@@ -1,4 +1,4 @@
-rom gate import train
+from gate import train
 from gate import test
 from torch import nn
 import torch
