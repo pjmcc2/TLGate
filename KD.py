@@ -43,12 +43,12 @@ class studentNet(nn.Module):
         self.teacher = teacher
         self.T = T
 
-        def forward(self, X):
-            student_logits = self.feature_extractor(X)
-            teacher_logits = self.teacher(X)
-            teacher_prob = nn.functional.softmax(teacher_logits / self.T, dim=-1)
-            student_prob = nn.functional.softmax(student_logits / self.T, dim=-1)
-            return student_prob, teacher_prob
+    def forward(self, X):
+        student_logits = self.feature_extractor(X)
+        teacher_logits = self.teacher(X)
+        teacher_prob = nn.functional.softmax(teacher_logits / self.T, dim=-1)
+        student_prob = nn.functional.softmax(student_logits / self.T, dim=-1)
+        return student_prob, teacher_prob
 
 
 ## DISCLAIMER: THE FOLLOWING CODE IS MOSTLY COPIED FROM THE PYTORCH KD TUTORIAL ##
