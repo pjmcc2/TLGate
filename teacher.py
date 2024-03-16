@@ -16,8 +16,6 @@ import argparse
 
 
 def main(args):
-    T = args.Temperature
-    a = args.a
     epochs = int(args.epochs)
     num_tests = int(args.num_tests)
     batch_size = int(args.batch_size)
@@ -46,17 +44,20 @@ def main(args):
 
 
     ### training part ###
-    epochs = epochs
-    num_tests = num_tests
+
     criterion = nn.CrossEntropyLoss()
 
     acc_lists_train = []
     loss_lists_train = []
     acc_lists_test = []
     loss_lists_test = []
-
+    instance_check = None
     for i in range(num_tests):
         teacher = vgg13(weights='DEFAULT', progress=True)
+        if instance_check is not None and (not np.allclose(teacher.classifier[0].weight.detach().numpy(), instance_check)):
+            raise ValueError("reinstantiation failed")
+        else:
+            instance_check = teacher.classifier[0].weight.detach().numpy()
         teacher.classifier[6] = nn.Linear(4096, 10, bias=True)
         teacher.to(device)
         optimizer = optim.Adam(teacher.parameters(), lr=0.0001)
