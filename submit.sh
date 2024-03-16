@@ -10,7 +10,7 @@
 module load slurm
 module load cuda/12.2
 source env/bin/activate
-python3 KD.py 1 1 512
+python3 KD.py 8 0.6 1 1 512
 
 
 # 30 epochs, 10 tests, 512 batch size

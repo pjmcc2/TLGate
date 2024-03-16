@@ -90,7 +90,7 @@ def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn,
         loss.backward()
         optimizer.step()
         _, predicted = torch.max(student_logits.data, 1)
-        acc = (predicted == labels).sum().item()/X.shape[0]
+        acc = (predicted == labels).sum().item()/inputs.shape[0]
         inc_acc = inc_acc + (acc-inc_acc)/(i+1)
     return inc_acc, inc_loss
 
