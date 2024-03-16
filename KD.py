@@ -54,7 +54,7 @@ class studentNet(nn.Module):
 ## DISCLAIMER: THE FOLLOWING CODE IS MOSTLY COPIED FROM THE PYTORCH KD TUTORIAL ##
 def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn, T, a, device):
     teacher.eval()  # Teacher set to evaluation mode
-    student.training()  # Student to train mode
+    student.train()  # Student to train mode
     optimizer = optim
     inc_acc=0
     inc_loss = 0
