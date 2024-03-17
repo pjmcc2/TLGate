@@ -171,7 +171,8 @@ def main(args):
     save_dict = {"train_acc": tr_acc,
                  "test_acc": te_acc,
                  "train_loss": tr_loss,
-                 "test_loss": te_loss
+                 "test_loss": te_loss,
+                 "args" : args
                  }
     with open(f"pickles/KD_model.pickle", "wb") as f:
         pickle.dump(save_dict, f)
