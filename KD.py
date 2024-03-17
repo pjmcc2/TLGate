@@ -96,8 +96,8 @@ def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn,
 
 
 def main(args):
-    T = args.Temperature
-    a = args.a
+    T = float(args.Temperature)
+    a = float(args.a)
     epochs = int(args.epochs)
     num_tests = int(args.num_tests)
     batch_size = int(args.batch_size)
