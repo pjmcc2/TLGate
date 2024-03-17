@@ -70,7 +70,7 @@ def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn,
 
         # Forward pass with the student model
         student_logits = student(inputs)
-
+        print(type(student_logits),student_logits)
         # I am changing this forget the log.
         ##Soften the student logits by applying softmax first and log() second
         soft_targets = nn.functional.softmax(teacher_logits / T, dim=-1)
