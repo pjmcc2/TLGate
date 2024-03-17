@@ -33,12 +33,15 @@ class studentNet(nn.Module):
             nn.Conv2d(128, 128, 14, 1),
             nn.Flatten(),
             nn.Linear(128, 1000),
-            nn.ReLU()
+            nn.ReLU(),
+            nn.Linear(1000,1000),
+            nn.ReLU(),
+            nn.Linear(1000,1000),
+            nn.ReLU(),
+            nn.Linear(1000,10),
         )
 
-        self.linear3 = nn.Linear(1000, 1000)
-        self.linear2 = nn.Linear(1000, 1000)
-        self.linear1 = nn.Linear(1000, 10)
+
 
 
     def forward(self, X):
