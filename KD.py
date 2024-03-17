@@ -18,7 +18,7 @@ import argparse
 
 
 class studentNet(nn.Module):
-    def __init__(self, teacher, T):
+    def __init__(self):
         super().__init__()
         self.feature_extractor = nn.Sequential(
             nn.Conv2d(3, 64, 3, 1),  # 30,30,64
@@ -40,16 +40,11 @@ class studentNet(nn.Module):
         self.linear2 = nn.Linear(1000, 1000)
         self.linear1 = nn.Linear(1000, 10)
 
-        self.teacher = teacher
-        self.T = T
 
     def forward(self, X):
         student_logits = self.feature_extractor(X)
-        teacher_logits = self.teacher(X)
-        teacher_prob = nn.functional.softmax(teacher_logits / self.T, dim=-1)
-        student_prob = nn.functional.softmax(student_logits / self.T, dim=-1)
-        return student_prob, teacher_prob
-
+    
+        return student_logits
 
 ## DISCLAIMER: THE FOLLOWING CODE IS MOSTLY COPIED FROM THE PYTORCH KD TUTORIAL ##
 def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn, T, a, device):
