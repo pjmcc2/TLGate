@@ -137,7 +137,7 @@ def main(args):
     loss_lists_test = []
 
     for i in range(num_tests):
-        model = studentNet(teacher, -1)
+        model = studentNet()
         model.to(device)
         optimizer = optim.Adam(model.parameters(), lr=0.0001)
         a_list_train = []
