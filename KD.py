@@ -174,7 +174,7 @@ def main(args):
                  "test_loss": te_loss,
                  "args" : args
                  }
-    with open(f"pickles/KD_model.pickle", "wb") as f:
+    with open(f"pickles/KD_model{a}.pickle", "wb") as f:
         pickle.dump(save_dict, f)
 
 
