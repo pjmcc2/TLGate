@@ -114,6 +114,10 @@ def main(args):
     num_tests=int(args.num_tests)
     batch_size=int(args.batch_size)
     
+    try:
+      gate_type = int(gate_type)
+    except:
+      gate_type = "all"
     
     
     
