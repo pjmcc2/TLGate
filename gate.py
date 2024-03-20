@@ -59,9 +59,11 @@ class ClassNet(nn.Module):
         if i == self.gate_location: # check if this location is for the gate
           X = nn.functional.relu(torch.mul(X,gate))
         X = self.relu(self.last_layers[i](X))
-
       else:
         X = self.relu(self.last_layers[i](X))
+    if self.gate_location == 2:
+       X = nn.functional.relu(torch.mul(X,gate))
+    X = self.last_layers[2](X)
     return X
 
 
