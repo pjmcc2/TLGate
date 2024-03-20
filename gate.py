@@ -12,6 +12,7 @@ from torchvision.transforms import Normalize
 import torch.optim as optim
 import argparse
 
+#My deep learning project
 
 # Classifier network
 class ClassNet(nn.Module):
