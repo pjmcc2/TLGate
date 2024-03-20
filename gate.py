@@ -179,7 +179,7 @@ def main(args):
     acc_lists_test = []
     loss_lists_test = []
     for i in range(num_tests):
-        model = ClassNet(gate,gate_type) 
+        model = ClassNet(gate,gate_type,T=T) 
         model.to(device)
         optimizer = optim.Adam(model.parameters(), lr=0.0001)
         a_list_train = []
