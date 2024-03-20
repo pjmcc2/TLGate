@@ -153,7 +153,7 @@ def main(args):
     else:
         with open("pickles/teacher.pickle","rb") as f:
           teacher_saved = pickle.load(f)
-       gate = teacher_saved["model"]
+        gate = teacher_saved["model"]
     gate.to(device)
     # Freeze layers
     for param in gate.parameters():
