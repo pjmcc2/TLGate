@@ -69,11 +69,11 @@ def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn,
         # Forward pass with the student model
         student_logits = student(inputs)
         print(type(student_logits),student_logits)
-        # I am changing this forget the log.
+       
         ##Soften the student logits by applying softmax first and log() second
         soft_targets = nn.functional.softmax(teacher_logits / T, dim=-1)
         # soft_prob = nn.functional.log_softmax(student_logits / T, dim=-1)
-        soft_prob = nn.functional.softmax(student_logits / T, dim=-1)
+        soft_prob = nn.functional.log_softmax(student_logits / T, dim=-1)
 
         # Calculate the soft targets loss. Scaled by T**2 as suggested by the authors of the paper "Distilling the knowledge in a neural network"
         soft_targets_loss = torch.sum(soft_targets * (soft_targets.log() - soft_prob)) / soft_prob.size()[0] * (T ** 2)
