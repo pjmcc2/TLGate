@@ -48,22 +48,21 @@ class ClassNet(nn.Module):
     X = self.feature_extractor(input)
     gate = self.gate_net(input)
 
-    if self.gate_location == "both":
+    if self.gate_location == "all":
       flag = True
     else:
       flag = False
-    for i in range(2):
+    for i in range(3):
       if flag:
         self.gate_location = i
       if self.training:
         if i == self.gate_location: # check if this location is for the gate
-          X = nn.functional.relu(torch.mul(X,gate))
+          X = torch.mul(X,gate)
         X = self.relu(self.last_layers[i](X))
       else:
         X = self.relu(self.last_layers[i](X))
-    if self.gate_location == 2:
-       X = nn.functional.relu(torch.mul(X,gate))
-    X = self.last_layers[2](X)
+
+  
     return X
 
 
@@ -120,7 +119,7 @@ def main(args):
     try:
       gate_type = int(gate_type)
     except:
-      gate_type = "both"
+      gate_type = "all"
     
     
     
@@ -160,8 +159,8 @@ def main(args):
         param.requires_grad = False
 
 
-    #gate_model_labels = ["no_gates", "layer_1","layer_2","last_layer", "both"]
-    #model_params = [-1, 0, 1, 2, "both"]
+    #gate_model_labels = ["no_gates", "layer_1","layer_2","last_layer", "all"]
+    #model_params = [-1, 0, 1, 2, "all"]
 
 
     ### training part ###
@@ -217,7 +216,7 @@ def main(args):
 if __name__ == "__main__":
 
   parser = argparse.ArgumentParser(description="Train a gate model and pickle the results")
-  parser.add_argument("gate_type", help="possible gates include: (-1, no gate), (0-1, gates getting closer to final layer), ('both', 0 and 1)")
+  parser.add_argument("gate_type", help="possible gates include: (-1, no gate), (0-1, gates getting closer to final layer), ('all', 0 and 1)")
   parser.add_argument("epochs", help="Number of training epochs")
   parser.add_argument("num_tests", help="number of training iterations")
   parser.add_argument("batch_size", help="batch_size")
