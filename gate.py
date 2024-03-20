@@ -147,15 +147,13 @@ def main(args):
     else:
         device='cpu'
 
-    #gate = vgg13(weights='DEFAULT',progress=True)
-    #gate.to(device)
-    # Freeze layers
-    #for param in gate.parameters():
-    #    param.requires_grad = False
-    with open("pickles/teacher.pickle","rb") as f:
-          teacher_saved = pickle.load(f)
 
-    gate = vgg13(weights="DEFAULT")
+    if gate_type != 2:
+      gate = vgg13(weights="DEFAULT")
+    else:
+        with open("pickles/teacher.pickle","rb") as f:
+          teacher_saved = pickle.load(f)
+       gate = teacher_saved["model"]
     gate.to(device)
     # Freeze layers
     for param in gate.parameters():
