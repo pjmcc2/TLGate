@@ -48,7 +48,7 @@ class ClassNet(nn.Module):
     X = self.feature_extractor(input)
     gate = self.gate_net(input)
 
-    if self.gate_location == "all":
+    if self.gate_location == "both":
       flag = True
     else:
       flag = False
@@ -118,7 +118,7 @@ def main(args):
     try:
       gate_type = int(gate_type)
     except:
-      gate_type = "all"
+      gate_type = "both"
     
     
     
@@ -160,8 +160,8 @@ def main(args):
         param.requires_grad = False
 
 
-    #gate_model_labels = ["no_gates", "layer_1","layer_2","last_layer", "all"]
-    #model_params = [-1, 0, 1, 2, "all"]
+    #gate_model_labels = ["no_gates", "layer_1","layer_2","last_layer", "both"]
+    #model_params = [-1, 0, 1, 2, "both"]
 
 
     ### training part ###
@@ -217,7 +217,7 @@ def main(args):
 if __name__ == "__main__":
 
   parser = argparse.ArgumentParser(description="Train a gate model and pickle the results")
-  parser.add_argument("gate_type", help="possible gates include: (-1, no gate), (0-2, gates getting closer to final layer), ('all', all)")
+  parser.add_argument("gate_type", help="possible gates include: (-1, no gate), (0-1, gates getting closer to final layer), ('both', 0 and 1)")
   parser.add_argument("epochs", help="Number of training epochs")
   parser.add_argument("num_tests", help="number of training iterations")
   parser.add_argument("batch_size", help="batch_size")
