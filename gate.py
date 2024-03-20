@@ -211,7 +211,8 @@ def main(args):
     save_dict = {"train_acc":tr_acc,
                 "test_acc":te_acc,
                 "train_loss":tr_loss, 
-                "test_loss":te_loss
+                "test_loss":te_loss,
+                "model":model
                 }
     with open(f"pickles/gate_model_{gate_type}_temp_{T}.pickle","wb") as f:
         pickle.dump(save_dict,f)
