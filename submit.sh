@@ -10,7 +10,7 @@
 module load slurm
 module load cuda/12.2
 source genv/bin/activate
-python3 gate.py 2 0 10 10 512
+python3 gate.py 2 6 10 10 512
 
 # 10 epochs, 10 tests, 512 batch size
 #python3 gate.py 0 30 10 512
