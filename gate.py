@@ -16,7 +16,7 @@ import argparse
 
 # Classifier network
 class ClassNet(nn.Module):
-  def __init__(self,gate_net,loc=0):
+  def __init__(self,gate_net,loc=0, T=None):
     super().__init__()
     self.feature_extractor = nn.Sequential(
         nn.Conv2d(3,64,3,1), # 30,30,64
@@ -42,12 +42,14 @@ class ClassNet(nn.Module):
     self.relu = nn.ReLU()
     self.gate_net = gate_net
     self.gate_location = loc
+    self.T = T
 
 
   def forward(self,input):
     X = self.feature_extractor(input)
     gate = self.gate_net(input)
-
+    if self.T is not None:
+       gate = gate/self.T
     if self.gate_location == "all":
       flag = True
     else:
@@ -112,6 +114,7 @@ def test(model,dataloader, criterion,device='cpu'):
 
 def main(args):
     gate_type=args.gate_type
+    T = int(args.T)
     epochs = int(args.epochs)
     num_tests=int(args.num_tests)
     batch_size=int(args.batch_size)
@@ -121,7 +124,8 @@ def main(args):
     except:
       gate_type = "all"
     
-    
+    if T == 0:
+      T = None
     
     
     train_data = CIFAR10(root="data",
@@ -217,6 +221,7 @@ if __name__ == "__main__":
 
   parser = argparse.ArgumentParser(description="Train a gate model and pickle the results")
   parser.add_argument("gate_type", help="possible gates include: (-1, no gate), (0-1, gates getting closer to final layer), ('all', 0 and 1)")
+  parser.add_argument("T", help="Optional Temperature")
   parser.add_argument("epochs", help="Number of training epochs")
   parser.add_argument("num_tests", help="number of training iterations")
   parser.add_argument("batch_size", help="batch_size")
