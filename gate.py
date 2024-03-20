@@ -16,7 +16,7 @@ import argparse
 
 # Classifier network
 class ClassNet(nn.Module):
-  def __init__(self,gate_net,loc=0, T=None):
+  def __init__(self,gate_net,loc=0, T=1):
     super().__init__()
     self.feature_extractor = nn.Sequential(
         nn.Conv2d(3,64,3,1), # 30,30,64
@@ -47,9 +47,8 @@ class ClassNet(nn.Module):
 
   def forward(self,input):
     X = self.feature_extractor(input)
-    gate = self.gate_net(input)
-    if self.T is not None:
-       gate = gate/self.T
+    gate = nn.functional.softmax(self.gate_net(input)/self.T)
+
     if self.gate_location == "all":
       flag = True
     else:
@@ -124,8 +123,8 @@ def main(args):
     except:
       gate_type = "all"
     
-    if T == 0:
-      T = None
+    if T <= 0:
+      T = 1
     
     
     train_data = CIFAR10(root="data",
