@@ -208,6 +208,8 @@ def main(args):
     tr_loss = np.array(loss_lists_train)
     te_loss = np.array(loss_lists_test)
 
+    ### REMOVE TODO ####
+    model.gate_net = None
     save_dict = {
                 "model":model
                 }
