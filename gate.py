@@ -47,7 +47,7 @@ class ClassNet(nn.Module):
 
   def forward(self,input):
     X = self.feature_extractor(input)
-    gate = nn.functional.softmax(self.gate_net(input)/self.T)
+    gate = nn.functional.softmax(self.gate_net(input)/self.T,dim=1)
 
     if self.gate_location == "all":
       flag = True
