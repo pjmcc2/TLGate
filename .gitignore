@@ -1,4 +1,4 @@
-env/
+genv/
 data/
 pickles/
 sbatch_logs/
