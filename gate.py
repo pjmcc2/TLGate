@@ -125,17 +125,17 @@ def main(args):
     
     if T <= 0:
       T = 1
-    
-    
+
+
     train_data = CIFAR10(root="data",
                         train=True,
                         download=True,
-                        transform=Compose([ToTensor(), Normalize(mean=(0.5,0.5,0.5),std = (0.5,0.5,0.5))]))
+                        transform=Compose([ToTensor(), Normalize(mean=(0.4914, 0.4822, 0.4465),std=(0.247, 0.243, 0.261))]))
 
     test_data = CIFAR10(root="data",
                         train=False,
                         download=True,
-                        transform=Compose([ToTensor(), Normalize(mean=(0.5,0.5,0.5),std = (0.5,0.5,0.5))]))
+                        transform=Compose([ToTensor(), Normalize(mean=(0.4914, 0.4822, 0.4465),std=(0.247, 0.243, 0.261))]))
 
 
     batch_size = batch_size

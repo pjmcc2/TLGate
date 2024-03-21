@@ -72,7 +72,6 @@ def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn,
        
         ##Soften the student logits by applying softmax first and log() second
         soft_targets = nn.functional.softmax(teacher_logits / T, dim=-1)
-        # soft_prob = nn.functional.log_softmax(student_logits / T, dim=-1)
         soft_prob = nn.functional.log_softmax(student_logits / T, dim=-1)
 
         # Calculate the soft targets loss. Scaled by T**2 as suggested by the authors of the paper "Distilling the knowledge in a neural network"
@@ -103,12 +102,12 @@ def main(args):
     train_data = CIFAR10(root="data",
                          train=True,
                          download=True,
-                         transform=Compose([ToTensor(), Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))]))
+                         transform=Compose([ToTensor(), Normalize(mean=(0.4914, 0.4822, 0.4465),std=(0.247, 0.243, 0.261))]))
 
     test_data = CIFAR10(root="data",
                         train=False,
                         download=True,
-                        transform=Compose([ToTensor(), Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5))]))
+                        transform=Compose([ToTensor(), Normalize(mean=(0.4914, 0.4822, 0.4465),std=(0.247, 0.243, 0.261))]))
 
     batch_size = batch_size
 
