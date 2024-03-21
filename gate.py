@@ -208,15 +208,13 @@ def main(args):
     tr_loss = np.array(loss_lists_train)
     te_loss = np.array(loss_lists_test)
 
-    ### REMOVE TODO ####
-    model.gate_net = None
+
     save_dict = { "train_acc": tr_acc,
                   "train_loss": tr_loss,
                   "test_loss": te_loss,
                   "test_acc": te_acc,
-                  "model": model
                 }
-    with open(f"pickles/gate_model_{gate_type}_{T}_model.pickle","wb") as f:
+    with open(f"pickles/gate_model_{gate_type}_{T}_{epochs}_epochs.pickle","wb") as f:
         pickle.dump(save_dict,f)
 
 if __name__ == "__main__":
