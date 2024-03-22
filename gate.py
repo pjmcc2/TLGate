@@ -256,7 +256,7 @@ def main(args):
     acc_lists_test = []
     loss_lists_test = []
     for i in range(num_tests):
-        model = ClassNet(gate,gate_type,T=T) 
+        model = CNet_v2(gate,gate_type,T=T) 
         model.to(device)
         optimizer = optim.Adam(model.parameters(), lr=0.0001)
         a_list_train = []
@@ -287,17 +287,14 @@ def main(args):
     te_loss = np.array(loss_lists_test)
 
 
-    # TODO remove
-    model.gate=None
 
     save_dict = { "train_acc": tr_acc,
                   "train_loss": tr_loss,
                   "test_loss": te_loss,
                   "test_acc": te_acc,
-                  "model": model
                 }
     
-    with open(f"pickles/gate_{gate_type}_{epochs}_epochs_saved_model.pickle","wb") as f:
+    with open(f"pickles/V2_{gate_type}_{epochs}_epochs.pickle","wb") as f:
         pickle.dump(save_dict,f)
 
 if __name__ == "__main__":
