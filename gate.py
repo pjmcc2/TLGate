@@ -67,6 +67,84 @@ class ClassNet(nn.Module):
     return X
 
 
+class CNet_v2(nn.Module):
+  def __init__(self,gate_net,loc=0, T=1):
+    super().__init__()
+    self.feature_extractor = nn.Sequential(
+        nn.Conv2d(3,16,3,1,1), # 32,32,16
+        nn.ReLU(),
+        nn.BatchNorm2d(16),
+        nn.Dropout(),
+        nn.Conv2d(16,32,3,1,1), # 32,32,32
+        nn.ReLU(),
+        nn.BatchNorm2d(32),
+        nn.Dropout(),
+        nn.Conv2d(32,64,3,1,1), # 32,64
+        nn.ReLU(),
+        nn.BatchNorm2d(64),
+        nn.Dropout(),
+        nn.Conv2d(64,128,3,2,padding=1), # 16,128
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,3,1,1), # 16
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,3,1,1), # 16
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,3,2,1), # 8
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,3,1,1), # 8
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,8,1), # 1
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),                
+        nn.Flatten(),
+        nn.Linear(128,1000),
+        nn.ReLU(),
+
+        )
+
+    self.linear3 = nn.Linear(1000,1000)
+    self.linear2 = nn.Linear(1000,1000)
+    self.linear1 = nn.Linear(1000,10)
+    self.last_layers = [self.linear3, self.linear2,self.linear1]
+    self.relu = nn.ReLU()
+    self.gate_net = gate_net
+    self.gate_location = loc
+    self.T = T
+
+
+  def forward(self,input):
+    X = self.feature_extractor(input)
+    gate = nn.functional.softmax(self.gate_net(input)/self.T,dim=1)
+
+    if self.gate_location == "all":
+      flag = True
+    else:
+      flag = False
+    for i in range(3):
+      if flag:
+        self.gate_location = i
+      if self.training:
+        if i == self.gate_location: # check if this location is for the gate
+          X = torch.mul(X,gate)
+        X = self.relu(self.last_layers[i](X))
+      else:
+        X = self.relu(self.last_layers[i](X))
+
+  
+    return X
+
+
 def train(model,dataloader, criterion, optimizer,device='cpu'):
     model.train()
     inc_acc=0
@@ -209,12 +287,17 @@ def main(args):
     te_loss = np.array(loss_lists_test)
 
 
+    # TODO remove
+    model.gate=None
+
     save_dict = { "train_acc": tr_acc,
                   "train_loss": tr_loss,
                   "test_loss": te_loss,
                   "test_acc": te_acc,
+                  "model": model
                 }
-    with open(f"pickles/gate_model_{gate_type}_{T}_{epochs}_epochs.pickle","wb") as f:
+    
+    with open(f"pickles/gate_{gate_type}_{epochs}_epochs_saved_model.pickle","wb") as f:
         pickle.dump(save_dict,f)
 
 if __name__ == "__main__":
