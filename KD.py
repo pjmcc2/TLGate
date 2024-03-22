@@ -49,6 +49,64 @@ class studentNet(nn.Module):
     
         return student_logits
 
+
+class Student_V2(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.feature_extractor = nn.Sequential(
+        nn.Conv2d(3,16,3,1,1), # 32,32,16
+        nn.ReLU(),
+        nn.BatchNorm2d(16),
+        nn.Dropout(),
+        nn.Conv2d(16,32,3,1,1), # 32,32,32
+        nn.ReLU(),
+        nn.BatchNorm2d(32),
+        nn.Dropout(),
+        nn.Conv2d(32,64,3,1,1), # 32,64
+        nn.ReLU(),
+        nn.BatchNorm2d(64),
+        nn.Dropout(),
+        nn.Conv2d(64,128,3,2,padding=1), # 16,128
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,3,1,1), # 16
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,3,1,1), # 16
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,3,2,1), # 8
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,3,1,1), # 8
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),
+        nn.Conv2d(128,128,8,1), # 1
+        nn.ReLU(),
+        nn.BatchNorm2d(128),
+        nn.Dropout(),                
+        nn.Flatten(),
+        nn.Linear(128,1000),
+        nn.ReLU(),
+        nn.Linear(1000,1000),
+        nn.ReLU(),
+        nn.Linear(1000,1000),
+        nn.ReLU(),
+        nn.Linear(1000,10),
+        )
+
+    def forward(self, X):
+        student_logits = self.feature_extractor(X)
+    
+        return student_logits
+
+
+
 ## DISCLAIMER: THE FOLLOWING CODE IS MOSTLY COPIED FROM THE PYTORCH KD TUTORIAL ##
 def train_knowledge_distillation(teacher, student, train_loader, optim, loss_fn, T, a, device):
     teacher.eval()  # Teacher set to evaluation mode
@@ -139,7 +197,7 @@ def main(args):
     loss_lists_test = []
 
     for i in range(num_tests):
-        model = studentNet()
+        model = Student_V2()
         model.to(device)
         optimizer = optim.Adam(model.parameters(), lr=0.0001)
         a_list_train = []
@@ -173,7 +231,7 @@ def main(args):
                  "test_loss": te_loss,
                  "args" : args
                  }
-    with open(f"pickles/KD_model{T}_{a}_{epochs}_epochs.pickle", "wb") as f:
+    with open(f"pickles/KD_V2_{T}_{a}_{epochs}_epochs.pickle", "wb") as f:
         pickle.dump(save_dict, f)
 
 
