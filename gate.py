@@ -294,7 +294,7 @@ def main(args):
                   "test_acc": te_acc,
                 }
     
-    with open(f"pickles/V2_{gate_type}_{epochs}_epochs.pickle","wb") as f:
+    with open(f"pickles/V2_{gate_type}_{T}_{epochs}_epochs.pickle","wb") as f:
         pickle.dump(save_dict,f)
 
 if __name__ == "__main__":
